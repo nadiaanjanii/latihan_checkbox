@@ -17,18 +17,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-    if (allStatus) {
-      Provider.of<MultiColor>(context, listen: false).initialData();
-      allStatus =
-          Provider.of<MultiColor>(context, listen: false).checkAllStatus();
-      initStatus = false;
+    if (initStatus) {
+      Provider.of<MultiColor>(context, listen: false).initialData().then(
+        (_) {
+          setState(
+            () {
+              allStatus = Provider.of<MultiColor>(context, listen: false)
+                  .checkAllStatus();
+              initStatus = false;
+            },
+          );
+        },
+      );
     }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    var colorsClass = Provider.of<MultiColor>(context);
+    var colorsClass = Provider.of<MultiColor>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text("Home Page"),
@@ -40,8 +47,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: colorsClass.colors.length == 0
-          ? Center(
+      body: colorsClass.colors.isEmpty
+          ? const Center(
               child: Text(
                 "No Data",
                 style: TextStyle(
@@ -78,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                               print(allStatus);
                             });
                           },
-                          title: Text("${e.title}"),
+                          title: Text(e.title),
                           controlAffinity: ListTileControlAffinity.leading,
                           contentPadding: EdgeInsets.symmetric(horizontal: 40),
                           secondary: IconButton(

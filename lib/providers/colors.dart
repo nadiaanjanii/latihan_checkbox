@@ -17,15 +17,17 @@ class MultiColor with ChangeNotifier {
       var hasil = await http.get(url);
       if (hasil.statusCode >= 200 && hasil.statusCode < 300) {
         var hasilData = json.decode(hasil.body) as Map<String, dynamic>;
+        List<SingleColor> fetchedColors = [];
         hasilData.forEach((key, value) {
-          _colors.add(
+          fetchedColors.add(
             SingleColor(
-              id: key,
+              id: json.decode(hasil.body)["name"].toString(),
               title: value["title"],
               status: value["status"],
             ),
           );
         });
+        _colors = fetchedColors;
         notifyListeners();
       } else {
         throw (hasil.statusCode);

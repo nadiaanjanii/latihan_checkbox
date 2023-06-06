@@ -11,7 +11,7 @@ class SingleColor with ChangeNotifier {
   });
 
   void toogleStatus() {
-    this.status = !this.status;
+    status = status;
     notifyListeners();
   }
 }
